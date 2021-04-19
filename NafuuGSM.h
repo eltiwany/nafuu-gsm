@@ -12,6 +12,7 @@
 class NafuuGSM
 {
 public:
+  void setPhoneNumber(String phoneNumber);
   void makeSelection();
   void changeLanguage();
   void changeOperatingMode();
