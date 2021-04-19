@@ -11,30 +11,32 @@
 
 class NafuuGSM
 {
-  public:
-    void makeSelection();
-    void changeLanguage();
-    void changeOperatingMode();
-    void makeSelectionSw();
-    void makeSelectionEn();
-    String getSelection();
-    void clearMonitor();
-    void updateSerial(String isFromMenu);
-    void readFromMonitor();
-    void makeCall(String phoneNumber);
-    void acceptCall();
-    void hangUpCall();
-    void testGSM();
-    void sendSMS(String phoneNumber, String message);
-    void readingSMS();
-    // variables
-    String language;
-    String serialMode;
-    NafuuGSM(SoftwareSerial * pointer);
-    void NafuuGSM::begin(uint32_t baudRate);
-  private:
-    SoftwareSerial * mySerial;
-    int _txPin, _rxPin; 
+public:
+  void makeSelection();
+  void changeLanguage();
+  void changeOperatingMode();
+  void makeSelectionSw();
+  void makeSelectionEn();
+  String getSelection();
+  void clearMonitor();
+  void updateSerial(String isFromMenu);
+  void readFromMonitor();
+  void makeCall(String phoneNumber);
+  void acceptCall();
+  void hangUpCall();
+  void testGSM();
+  void sendSMS(String phoneNumber, String message);
+  void readingSMS();
+  // variables
+  String language;
+  String serialMode;
+  String phoneNumber;
+  NafuuGSM(SoftwareSerial *pointer);
+  void NafuuGSM::begin(uint32_t baudRate);
+
+private:
+  SoftwareSerial *mySerial;
+  int _txPin, _rxPin;
 };
 
 #endif

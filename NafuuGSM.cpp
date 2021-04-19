@@ -1,36 +1,48 @@
 #include "NafuuGSM.h"
 #include <SoftwareSerial.h>
 
-NafuuGSM::NafuuGSM(SoftwareSerial * pointer) {
+NafuuGSM::NafuuGSM(SoftwareSerial *pointer)
+{
   mySerial = pointer;
   language = "";
   serialMode = "built_in_menu";
 }
 
-void NafuuGSM::begin(uint32_t baudRate) {
+void NafuuGSM::begin(uint32_t baudRate)
+{
   mySerial->begin(baudRate);
   Serial.begin(baudRate);
 }
 
-void NafuuGSM::makeSelection() {
-  if (language.length() == 0) {
+void NafuuGSM::setPhoneNumber(String phoneNumber)
+{
+  this.phoneNumber = phoneNumber;
+}
+
+void NafuuGSM::makeSelection()
+{
+  if (language.length() == 0)
+  {
     clearMonitor();
     Serial.println("AT Commands based GSM Tester");
     Serial.println("By: Ali Saleh");
     Serial.println("https://nafuutronics.com");
     changeOperatingMode();
     changeLanguage();
-  }else{
-      if (language == "en") 
-        makeSelectionEn();
-      else if (language == "sw")
-        makeSelectionSw();
-      else
-        makeSelectionEn();
+  }
+  else
+  {
+    if (language == "en")
+      makeSelectionEn();
+    else if (language == "sw")
+      makeSelectionSw();
+    else
+      makeSelectionEn();
   }
 }
 
-void NafuuGSM::changeLanguage() {
+void NafuuGSM::changeLanguage()
+{
   clearMonitor();
   Serial.println("Select Language:");
   Serial.println("1. English");
@@ -46,7 +58,8 @@ void NafuuGSM::changeLanguage() {
     language = "en";
 }
 
-void NafuuGSM::changeOperatingMode() {
+void NafuuGSM::changeOperatingMode()
+{
   clearMonitor();
   Serial.println("Operating Mode:");
   Serial.println("1. Menu Mode");
@@ -59,7 +72,8 @@ void NafuuGSM::changeOperatingMode() {
     serialMode = "serial_monitor";
 }
 
-void NafuuGSM::makeSelectionSw() {
+void NafuuGSM::makeSelectionSw()
+{
   clearMonitor();
   Serial.println("1. Piga Simu");
   Serial.println("2. Tuma Meseji");
@@ -73,7 +87,8 @@ void NafuuGSM::makeSelectionSw() {
   updateSerial("built_in_menu");
 }
 
-void NafuuGSM::makeSelectionEn() {
+void NafuuGSM::makeSelectionEn()
+{
   clearMonitor();
   Serial.println("1. Make Call");
   Serial.println("2. Send SMS");
@@ -87,25 +102,30 @@ void NafuuGSM::makeSelectionEn() {
   updateSerial("built_in_menu");
 }
 
-String NafuuGSM::getSelection() {
-  while (!Serial.available()) {}
+String NafuuGSM::getSelection()
+{
+  while (!Serial.available())
+  {
+  }
   return Serial.readString();
 }
 
-void NafuuGSM::clearMonitor() {
-//  Serial.write(27);
-//  Serial.print("[2J");
+void NafuuGSM::clearMonitor()
+{
+  //  Serial.write(27);
+  //  Serial.print("[2J");
   Serial.println("");
 }
 
 void NafuuGSM::updateSerial(String isFromMenu)
 {
-  if (isFromMenu == "built_in_menu") {
+  if (isFromMenu == "built_in_menu")
+  {
     char selection = getSelection().charAt(0);
     if (selection == '1')
-      makeCall("+255777464655");
+      makeCall();
     else if (selection == '2')
-      sendSMS("+255777464655", "This is a test message from nafuutronics.com");
+      sendSMS("This is a test message from nafuutronics.com");
     else if (selection == '3')
       readingSMS();
     else if (selection == '4')
@@ -119,47 +139,52 @@ void NafuuGSM::updateSerial(String isFromMenu)
     else if (selection == '8')
       changeOperatingMode();
   }
-  else if (isFromMenu == "serial_monitor") {
+  else if (isFromMenu == "serial_monitor")
+  {
     readFromMonitor();
   }
 }
 
-void NafuuGSM::readFromMonitor() {
+void NafuuGSM::readFromMonitor()
+{
   delay(500);
-  while (Serial.available()) 
+  while (Serial.available())
   {
-    mySerial->write(Serial.read());//Forward what Serial received to Software Serial Port
+    mySerial->write(Serial.read()); //Forward what Serial received to Software Serial Port
   }
-  while(mySerial->available()) 
+  while (mySerial->available())
   {
-    Serial.write(mySerial->read());//Forward what Software Serial received to Serial Port
+    Serial.write(mySerial->read()); //Forward what Software Serial received to Serial Port
   }
 }
 
-void NafuuGSM::makeCall(String phoneNumber)
+void NafuuGSM::makeCall()
 {
   mySerial->println("AT"); //Once the handshake test is successful, i t will back to OK
   updateSerial("serial_monitor");
-  
+
   mySerial->println("ATD" + phoneNumber); //  change ZZ with country code and xxxxxxxxxxx with phone number to dial
   updateSerial("serial_monitor");
-  
-  delay(20000); // wait for 20 seconds...
+
+  delay(20000);             // wait for 20 seconds...
   mySerial->println("ATH"); //hang up
   updateSerial("serial_monitor");
 }
 
-void NafuuGSM::acceptCall() {
+void NafuuGSM::acceptCall()
+{
   mySerial->println("ATA"); //accept
   updateSerial("serial_monitor");
 }
 
-void NafuuGSM::hangUpCall() {
+void NafuuGSM::hangUpCall()
+{
   mySerial->println("ATH"); //hang up
   updateSerial("serial_monitor");
 }
 
-void NafuuGSM::testGSM() {
+void NafuuGSM::testGSM()
+{
   mySerial->println("AT"); //Once the handshake test is successful, it will back to OK
   updateSerial("serial_monitor");
   mySerial->println("AT+CSQ"); //Signal quality test, value range is 0-31 , 31 is the best
@@ -170,21 +195,23 @@ void NafuuGSM::testGSM() {
   updateSerial("serial_monitor");
 }
 
-void NafuuGSM::sendSMS(String phoneNumber, String message) {
+void NafuuGSM::sendSMS(String message)
+{
   mySerial->println("AT"); //Once the handshake test is successful, it will back to OK
   updateSerial("serial_monitor");
 
   mySerial->println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial("serial_monitor");
   mySerial->print("AT+CMGS=\"");
-  mySerial->println(phoneNumber + "\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  mySerial->println(phoneNumber + "\""); //change ZZ with country code and xxxxxxxxxxx with phone number to sms
   updateSerial("serial_monitor");
   mySerial->print(message); //text content
   updateSerial("serial_monitor");
   mySerial->write(26);
 }
 
-void NafuuGSM::readingSMS() {
+void NafuuGSM::readingSMS()
+{
   mySerial->println("AT"); //Once the handshake test is successful, it will back to OK
   updateSerial("serial_monitor");
   mySerial->println("AT+CMGF=1"); // Configuring TEXT mode

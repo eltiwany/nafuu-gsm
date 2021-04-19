@@ -4,8 +4,10 @@
 SoftwareSerial serial(9, 10);
 NafuuGSM gsm(&serial);
 
-void setup() {
+void setup()
+{
   gsm.begin(9600);
+  gsm.setPhoneNumber("+255777464655");
 }
 
 void loop()
