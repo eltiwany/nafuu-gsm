@@ -14,9 +14,9 @@ void NafuuGSM::begin(uint32_t baudRate)
   Serial.begin(baudRate);
 }
 
-void NafuuGSM::setPhoneNumber(String phoneNumber)
+void NafuuGSM::setPhoneNumber(String _phoneNumber)
 {
-  this.phoneNumber = phoneNumber;
+  phoneNumber = _phoneNumber;
 }
 
 void NafuuGSM::makeSelection()
