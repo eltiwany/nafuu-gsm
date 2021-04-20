@@ -22,11 +22,11 @@ public:
   void clearMonitor();
   void updateSerial(String isFromMenu);
   void readFromMonitor();
-  void makeCall(String phoneNumber);
+  void makeCall();
   void acceptCall();
   void hangUpCall();
   void testGSM();
-  void sendSMS(String phoneNumber, String message);
+  void sendSMS(String message);
   void readingSMS();
   // variables
   String language;
